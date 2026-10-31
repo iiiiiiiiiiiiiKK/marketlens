@@ -146,6 +146,7 @@ npm run dev          # http://localhost:5173
 | `npm run test:e2e` | Playwright：20 个确定性 UI 测试（桌面 + iPhone 13） |
 | `npx playwright test --project=live` | 4 个直连真实交易所的联机测试 |
 | `npx playwright test --project=screenshots` | 重新生成 `docs/screenshots/` 截图 |
+| `node scripts/smoke.mjs <url> [--proxy <url>]` | 针对已部署网址的生产冒烟检查（桌面 + 移动端，真实数据） |
 | `npm run verify` | lint + 测试 + 构建 |
 
 ## 测试

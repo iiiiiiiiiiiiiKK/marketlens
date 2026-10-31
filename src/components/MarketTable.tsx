@@ -308,6 +308,9 @@ export function MarketTable({
                 <div
                   key={ticker.id}
                   role="row"
+                  data-testid="market-row"
+                  data-exchange={ticker.exchange}
+                  data-symbol={ticker.rawSymbol}
                   style={{
                     gridTemplateColumns: template,
                     position: 'absolute',

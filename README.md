@@ -165,6 +165,7 @@ secrets, no `.env` file** — the app only talks to public endpoints.
 | `npm run test:e2e` | Playwright: 20 deterministic UI tests (desktop + iPhone 13) |
 | `npx playwright test --project=live` | 4 live tests against the real exchange APIs |
 | `npx playwright test --project=screenshots` | Regenerates `docs/screenshots/` |
+| `node scripts/smoke.mjs <url> [--proxy <url>]` | Production smoke check against a deployed URL (desktop + mobile, real data) |
 | `npm run verify` | lint + tests + build |
 
 ## Testing
