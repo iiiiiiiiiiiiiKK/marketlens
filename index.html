@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>MarketLens — See The Market Clearly</title>
+    <meta
+      name="description"
+      content="MarketLens is a free, open-source crypto market dashboard. Compare Binance and Bybit spot & perpetual futures prices, candles, order books and funding rates — no sign-up, no API keys."
+    />
+    <meta name="theme-color" content="#0a0c10" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://api.binance.com" />
+    <link rel="preconnect" href="https://fapi.binance.com" />
+    <link rel="preconnect" href="https://api.bybit.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="MarketLens — See The Market Clearly" />
+    <meta
+      property="og:description"
+      content="A free, open-source cryptocurrency market data dashboard. Spot + perpetual futures from Binance and Bybit, no account required."
+    />
+    <script>
+      // Apply the persisted theme + language before first paint to avoid a flash.
+      (function () {
+        try {
+          var raw = localStorage.getItem('marketlens.settings.v1');
+          var stored = raw ? JSON.parse(raw).state : null;
+          var theme = (stored && stored.theme) || null;
+          var lang = (stored && stored.lang) || null;
+          if (!theme) {
+            theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          }
+          if (!lang) {
+            lang = (navigator.language || 'en').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+          }
+          document.documentElement.classList.toggle('dark', theme !== 'light');
+          document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+        } catch (e) {
+          /* storage blocked — defaults from markup apply */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      MarketLens needs JavaScript enabled: it loads live public market data directly from the exchange APIs.
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
