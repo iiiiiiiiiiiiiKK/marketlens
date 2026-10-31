@@ -165,6 +165,8 @@ export function PairView({ exchange, rawSymbol }: { exchange: ExchangeId; rawSym
               exchange={exchange}
               rawSymbol={rawSymbol}
               symbol={ticker?.symbol ?? `${base}/${quote}`}
+              fallbackPrice={ticker?.price ?? null}
+              fallbackChange={ticker?.changePercent24h ?? null}
               heightClass={isMobile ? 'h-[330px]' : 'h-[440px]'}
             />
           )}

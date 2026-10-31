@@ -24,6 +24,9 @@ interface ChartPanelProps {
   exchange: ExchangeId;
   rawSymbol: string;
   symbol: string;
+  /** Last known price from the ticker store, shown until a candle or tick lands. */
+  fallbackPrice?: number | null;
+  fallbackChange?: number | null;
   heightClass?: string;
   compactHeader?: boolean;
 }
@@ -38,7 +41,15 @@ const INTERVAL_LABEL: Record<ChartInterval, string> = {
   '1w': '1W',
 };
 
-export function ChartPanel({ exchange, rawSymbol, symbol, heightClass = 'h-[320px] sm:h-[420px]', compactHeader = false }: ChartPanelProps) {
+export function ChartPanel({
+  exchange,
+  rawSymbol,
+  symbol,
+  fallbackPrice = null,
+  fallbackChange = null,
+  heightClass = 'h-[320px] sm:h-[420px]',
+  compactHeader = false,
+}: ChartPanelProps) {
   const t = useT();
   const lang = useLang();
   const theme = useSettings((state) => state.theme);
@@ -57,8 +68,8 @@ export function ChartPanel({ exchange, rawSymbol, symbol, heightClass = 'h-[320p
   const supported = adapter.intervals;
 
   const last = candles.length > 0 ? candles[candles.length - 1] : null;
-  const currentPrice = live?.price ?? last?.close ?? null;
-  const change = live?.changePercent24h ?? null;
+  const currentPrice = live?.price ?? last?.close ?? fallbackPrice ?? null;
+  const change = live?.changePercent24h ?? fallbackChange ?? null;
   const legend = hover ?? last;
 
   // Create the chart once per theme; the series data is fed by a separate effect.
