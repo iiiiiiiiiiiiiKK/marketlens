@@ -73,7 +73,11 @@ await run('desktop pair', { width: 1440, height: 900 }, '#/pair/binance-futures/
 });
 
 await run('desktop compare', { width: 1440, height: 900 }, '#/compare', async (page) => {
-  await page.locator('tbody tr').first().waitFor({ timeout: 45_000 });
+  // Wait until the comparison actually spans multiple venues, not the first row that paints.
+  for (let index = 0; index < 30; index += 1) {
+    if ((await page.locator('tbody tr').count()) >= 3) break;
+    await page.waitForTimeout(1000);
+  }
   const rows = await page.locator('tbody tr').count();
   const hasFormula = await page.getByText(/Spread =/).isVisible();
   return `${rows} venue rows, formula disclosed ${hasFormula}`;

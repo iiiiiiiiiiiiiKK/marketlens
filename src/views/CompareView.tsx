@@ -15,12 +15,24 @@ export function CompareView({ initialPair }: { initialPair: string | null }) {
   const tickers = useMemo(() => flattenTickers(sources), [sources]);
   const pairs = useMemo(() => comparablePairs(tickers), [tickers]);
   const [selected, setSelected] = useState<string | null>(initialPair);
+  /** Set once the visitor picks a pair, so auto-selection stops overriding it. */
+  const [userPicked, setUserPicked] = useState(Boolean(initialPair));
 
+  // Keep converging on the best default until the visitor chooses explicitly —
+  // sources arrive progressively, so the first loaded pair may be a thin one.
   useEffect(() => {
-    if (selected) return;
+    if (userPicked) return;
     const preferred = pairs.find((pair) => pair.base === 'BTC' && pair.quote === 'USDT') ?? pairs[0];
-    if (preferred) setSelected(`${preferred.base}/${preferred.quote}`);
-  }, [pairs, selected]);
+    if (preferred) {
+      const next = `${preferred.base}/${preferred.quote}`;
+      if (next !== selected) setSelected(next);
+    }
+  }, [pairs, selected, userPicked]);
+
+  const pickPair = (pair: string) => {
+    setUserPicked(true);
+    setSelected(pair);
+  };
 
   const [base, quote] = (selected ?? '/').split('/');
   const result = useMemo(
@@ -41,7 +53,7 @@ export function CompareView({ initialPair }: { initialPair: string | null }) {
             <button
               key={pair}
               type="button"
-              onClick={() => setSelected(pair)}
+              onClick={() => pickPair(pair)}
               className={`rounded border px-1.5 py-0.5 text-2xs ${
                 selected === pair ? 'border-accent/60 bg-accent/15 text-accent' : 'border-line text-muted hover:text-ink'
               }`}
@@ -51,7 +63,7 @@ export function CompareView({ initialPair }: { initialPair: string | null }) {
           ))}
           <select
             value={selected ?? ''}
-            onChange={(event) => setSelected(event.target.value)}
+            onChange={(event) => pickPair(event.target.value)}
             aria-label={t('compare.selectPair')}
             className="h-6 max-w-[160px] rounded border border-line bg-panel px-1 text-2xs text-ink focus:border-accent/70 focus:outline-none"
           >
